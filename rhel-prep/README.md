@@ -1,7 +1,7 @@
-Role Name
+rhel-prep
 =========
 
-A brief description of the role goes here.
+The role for registration in RHSM and adding repositories according to RHEL distro version
 
 Requirements
 ------------
