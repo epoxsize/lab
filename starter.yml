@@ -1,0 +1,11 @@
+---
+- hosts: lin
+  gather_facts: yes
+  tasks:
+  - include_role:
+      name: rhel-prep
+    vars:
+      enable_rhsm: True
+      rhsm_username: RHN Username
+      rhsm_password: RHN Password
+      rhsm_pool_id: RHSM POOL_ID

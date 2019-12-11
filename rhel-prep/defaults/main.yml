@@ -1,0 +1,23 @@
+---
+##############################
+# SET REPO AND BASIC SOFTWARE
+##############################
+
+rhsm_rhel7_repos:
+  - rhel-7-server-rpms
+  - rhel-7-server-optional-rpms
+  - rhel-7-server-extras-rpms
+  - rhel-7-server-supplementary-rpms
+  - rhel-7-server-rhceph-3-tools-rpms
+  - rhel-7-server-ansible-2.6-rpms
+rhsm_rhel8_repos:
+  - rhel-8-for-x86_64-baseos-rpms
+  - rhel-8-for-x86_64-appstream-rpms
+rhel_additional_software:
+  - tmux
+  - bind-utils
+  - net-tools
+  - firewalld
+  - yum-utils
+
+# defaults file for rhel-prep

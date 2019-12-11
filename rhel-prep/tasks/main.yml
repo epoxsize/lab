@@ -1,0 +1,47 @@
+---
+- name: Setting Up RHSM
+  redhat_subscription:
+      username: "{{ rhsm_username }}"
+      password: "{{ rhsm_password }}"
+      pool_ids: "{{ rhsm_pool_id }}"
+      force_register: yes
+  when: enable_rhsm|bool == True
+#####
+##### RHSM registration works only when its enabled during workflow process
+#####
+- name: Disabling all repos
+  rhsm_repository:
+      state: disabled 
+      name: "*"
+- name: Setting up repos
+  rhsm_repository:
+      state: present 
+      name: "{{ item }}" 
+  when: 
+    - ansible_distribution == "RedHat"
+    - ansible_distribution_major_version == "8"
+  with_items:
+    - "{{rhsm_rhel8_repos}}"
+- name: Setting up Repos for RHEL7 
+  rhsm_repository:
+      state: present 
+      name: "{{ item }}" 
+  when: 
+    - ansible_distribution == "RedHat"
+    - ansible_distribution_major_version == "7"
+  with_items:
+    - "{{ rhsm_rhel7_repos }}"
+- name: Upgrading package to the latest versions
+  dnf:
+    state: latest
+    name: "*"
+  when: 
+    - ansible_distribution == "RedHat"
+    - ansible_distribution_major_version == "8"
+##### Installing some packages for testing purposes
+- name: Installing packages for basework
+  package:
+      state: present
+      name: "{{ item }}"
+  with_items:
+    - "{{rhel_additional_software}}"
