@@ -15,7 +15,6 @@ rhsm_rhel8_repos:
   - rhel-8-for-x86_64-appstream-rpms
   - rhceph-4-tools-for-rhel-8-x86_64-rpms
   - ansible-2.8-for-rhel-8-x86_64-rpms
-  - rhel-7-server-rhceph-4-tools-rpms
 rhel_additional_software:
   - tmux
   - bind-utils

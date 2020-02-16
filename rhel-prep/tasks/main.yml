@@ -45,3 +45,33 @@
       name: "{{ item }}"
   with_items:
     - "{{rhel_additional_software}}"
+ 
+- name: Enabling firewalld
+  service:
+    name: firewalld
+    state: started
+- name: Starring firewalld
+  service:
+    name: firewalld
+    state: started
+- name: Enabling Nessecary ports
+  firewalld:
+    state: enabled
+    port: "{{ item }}"
+    permanent: True
+  loop:
+    - 22/tcp
+    - 6789/tcp
+    - 6700-7300/tcp
+    - 8080/tcp
+    - 80/tcp
+    - 443/tcp
+    - 9090/tcp
+    - 6800/tcp
+    - 6789/tcp
+- name: Reload FirewallCMD
+  command: firewall-cmd --reload
+- name: Restart Firewalld
+  service:
+      name: firewalld
+      state: restarted
