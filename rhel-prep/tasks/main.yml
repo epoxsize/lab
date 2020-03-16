@@ -75,3 +75,51 @@
   service:
       name: firewalld
       state: restarted
+
+### Creating users for key-based deployment
+
+- name: creating user
+  user:
+      name: "{{ ceph_username }}" # required. Name of the user to create, remove or modify.
+      comment: "Username for ceph deployment" # not required. Optionally sets the description (aka I(GECOS)) of user account.
+      create_home: yes # not required. Unless set to C(no), a home directory will be made for the user when the account is created or if the home directory does not exist.,Changed from C(createhome) to C(create_home) in version 2.5.
+      groups: wheel # not required. List of groups user will be added to. When set to an empty string C(''), C(null), or C(~), the user is removed from all groups except the primary group. (C(~) means C(null) in YAML),Before version 2.3, the only input format allowed was a comma separated string. Now this parameter accepts a list as well as a comma separated string.
+- name: adding nessecary configuration for sudo
+  lineinfile:
+      path: "/etc/sudoers.d/{{ ceph_username }}" # required. The file to modify.,Before 2.3 this option was only usable as I(dest), I(destfile) and I(name).
+      create: yes # not required. Used with C(state=present). If specified, the file will be created if it does not already exist. By default it will fail if the file is missing.
+      state: present # not required. choices: absent;present. Whether the line should be there or not.
+      line: "{{ ceph_username }}	ALL=(ALL)	NOPASSWD: ALL"
+      mode: 0440
+- name: Adding keys to the user
+  authorized_key:
+      user: "{{ ceph_username }}" # required. The username on the remote host whose authorized_keys file will be modified
+      comment: undefined # not required. Change the comment on the public key. Rewriting the comment is useful in cases such as fetching it from GitHub or GitLab.,If no comment is specified, the existing comment will be kept.
+      key: "{{ ceph_user_key }}" # not required. A string of ssh key options to be prepended to the key in the authorized_keys file
+      state: present # not required. choices: present;absent. Whether the given key (with the given key_options) should or should not be in the file
+
+### installing ceph-ansible on bastion node 
+
+
+- name: Block of preparing bastion
+  block:
+    - name: installing cockpit
+      package:
+        name: cockpit
+        state: present
+    - name: enabling cockpit
+      service:
+        name: cockpit.socket
+        enabled: yes
+        state: started
+    - name: enabling ports for cockpit
+      firewalld:
+        port: 9090/tcp
+        state: enabled
+        immediate: true
+        permanent: true
+    - name: installing ceph-ansible
+      package:
+        name: cockpit-ceph-installer
+        state: present
+  when: "'bastion' in group_names"
