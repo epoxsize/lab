@@ -1,6 +1,33 @@
 ---
-- hosts: ceph-nodes
+- name: Setting up server
+  hosts: sat
   gather_facts: yes
   tasks:
   - include_role:
       name: rhel-prep
+    vars:
+      deploy_username: ansible-user
+      deploy_user_key: "{{ lookup('file', '/home/user/.ssh/id_rsa.pub') }}"
+      user_crypted_password: 
+      rhel_ports_to_open:
+        - 80/tcp
+        - 5647/tcp
+        - 443/tcp
+        - 8000/tcp
+        - 8140/tcp
+        - 9090/tcp
+        - 53/tcp
+        - 53/udp
+        - 67/udp
+        - 69/udp
+        - 5000/tcp
+      rhsm_rhel7_repos:
+        - rhel-7-server-rpms
+        - rhel-7-server-satellite-6.6-rpms
+        - rhel-7-server-satellite-maintenance-6-rpms 
+        - rhel-server-rhscl-7-rpms
+        - rhel-7-server-ansible-2.8-rpms
+      rhsm_username: rhsm_username
+      rhsm_password: rhsm_password
+      rhsm_pool_id: pool
+      enable_rhsm: True

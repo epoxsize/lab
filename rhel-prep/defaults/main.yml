@@ -28,7 +28,19 @@ rhel_additional_software:
 # defaults for creating user
 ##############################
 
-ceph_username: ansible-user
-ceph_user_key: "{{ lookup('file', '/home/user/.ssh/id_rsa.pub') }}"
+rhel_ports_to_open:
+  - 22/tcp
+  - 6789/tcp
+  - 6700-7300/tcp
+  - 8080/tcp
+  - 80/tcp
+  - 443/tcp
+  - 9090/tcp
+  - 6800/tcp
+  - 6789/tcp
+
+deploy_username: ansible-user
+deploy_user_key: "{{ lookup('file', '/home/dalekhin/.ssh/id_rsa.pub') }}"
+user_crypted_password: yoursalt
 
 # defaults file for rhel-prep
